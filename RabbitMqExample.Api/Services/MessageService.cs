@@ -15,23 +15,21 @@ namespace RabbitMqExample.Api.Services
 
             var factory = new ConnectionFactory
             {
-                HostName = "161.35.212.30", 
+                HostName = "165.227.158.6",
+                Port = 5672,
                 UserName = "guest",
                 Password = "guest",
-
+                VirtualHost = "/",
             };
-
             var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 
-            channel.QueueDeclare("booking", durable: true, exclusive: true);
+            channel.QueueDeclare("booking", durable: true, exclusive: false);
 
             var jsonString = JsonSerializer.Serialize(message);
             var body = Encoding.UTF8.GetBytes(jsonString);
 
             channel.BasicPublish("", "booking", null, body);
-
-
         }
     }
 }
