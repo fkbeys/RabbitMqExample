@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RabbitMqExample.Api.Models;
-using RabbitMqExample.Api.Services;
+using RabbitMqExample.Common.Models;
+using RabbitMqExample.Common.Services;
 
 namespace RabbitMqExample.Api.Controllers
 {
@@ -8,14 +8,13 @@ namespace RabbitMqExample.Api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly IMessageService _messageService;
+        private readonly MessageService<Booking> _messageService;
 
-        public ValuesController(IMessageService messageService)
+        public ValuesController(MessageService<Booking> messageService)
         {
-            this._messageService = messageService;
+            _messageService = messageService;
+            // _messageService = new MessageService<Booking>(rabbitMqSettings);
         }
-
-
 
         [HttpGet]
         public IActionResult Get()

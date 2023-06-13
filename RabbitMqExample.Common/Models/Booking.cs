@@ -1,4 +1,4 @@
-﻿namespace RabbitMqExample.Api.Models
+﻿namespace RabbitMqExample.Common.Models
 {
     public class Booking
     {

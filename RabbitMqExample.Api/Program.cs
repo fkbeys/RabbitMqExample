@@ -1,5 +1,4 @@
-
-using RabbitMqExample.Api.Services;
+using RabbitMqExample.Common.Models;
 
 namespace RabbitMqExample.Api
 {
@@ -11,11 +10,22 @@ namespace RabbitMqExample.Api
 
             // Add services to the container.
 
+            var conf = builder.Configuration;
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<IMessageService, MessageService>();
+
+            // Services
+            //builder.Services.Configure<RabbitMqSettings>(conf.GetSection("RabbitMqSettings"));
+
+            RabbitMqSettings? dbSettings = conf.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
+            builder.Services.AddSingleton<IRabbitMqSettings>(dbSettings);
+
+            // builder.Services.AddScoped(typeof(MessageAbstractService<>), typeof(MessageService<>));
+
+
 
             var app = builder.Build();
 
