@@ -35,60 +35,31 @@ namespace RabbitMqExample.Common.Services
             channel.QueueDeclare(queueName(), durable: true, exclusive: false);
             return (connection, channel);
         }
-        //public override T ReceiveMessage()
-        //{
-        //    var taskCompletionSource = new TaskCompletionSource<T>();
-        //    var consumer = new EventingBasicConsumer(_channel);
 
-        //    consumer.Received += (sender, args) =>
-        //    {
-        //        var body = args.Body.ToArray();
-        //        var message = Encoding.UTF8.GetString(body);
-        //        T data = JsonSerializer.Deserialize<T>(message);
-
-        //        taskCompletionSource.SetResult(data);
-        //    };
-        //    _channel.BasicConsume(queue: queueName(), autoAck: true, consumer: consumer);
-        //    var sss = taskCompletionSource.Task.Result;
-        //    return sss;
-        //}
-
-        //public override T ReceiveMessage()
-        //{
-        //    var taskCompletionSource = new TaskCompletionSource<T>();
-        //    var consumer = new EventingBasicConsumer(_channel);
-
-        //    consumer.Received += (sender, args) =>
-        //    {
-        //        var body = args.Body.ToArray();
-        //        var message = Encoding.UTF8.GetString(body);
-        //        T data = JsonSerializer.Deserialize<T>(message);
-
-        //        taskCompletionSource.SetResult(data);
-        //    };
-        //    _channel.BasicConsume(queue: queueName(), autoAck: true, consumer: consumer);
-        //    var sss = taskCompletionSource.Task.Result;
-        //    return sss;
-        //}
-
-        public void test()
+        public override void ReceiveMessage(Action<T> callback)
         {
             var consumer = new EventingBasicConsumer(_channel);
-            consumer.Received += Consumer_Received;
+
+            consumer.Received += (sender, args) =>
+            {
+                var body = args.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                T data = JsonSerializer.Deserialize<T>(message);
+
+                callback(data);
+            };
+
+            _channel.BasicConsume(queue: queueName(), autoAck: true, consumer: consumer);
         }
 
-        public override void Consumer_Received(object? sender, BasicDeliverEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
+         
         public override void SendMessage(T message)
         {
             var jsonString = JsonSerializer.Serialize(message);
             var body = Encoding.UTF8.GetBytes(jsonString);
-            _channel.BasicPublish(exchangeName(), queueName(), null, body);
+            //_channel.BasicPublish("", queueName(), null, body);
+            _channel.BasicPublish(exchange: "", routingKey: queueName(), basicProperties: null, body: body);
+
         }
 
         public void Dispose()
@@ -97,7 +68,7 @@ namespace RabbitMqExample.Common.Services
             _connection.Dispose();
         }
 
-
+       
     }
 
 }

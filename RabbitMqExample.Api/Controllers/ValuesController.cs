@@ -15,11 +15,10 @@ namespace RabbitMqExample.Api.Controllers
             _messageService = messageService;
         }
 
-        [HttpGet]
-        public IActionResult Get()
+        [HttpPost]
+        public IActionResult SendData(Booking bookingInfo)
         {
-            var msg = new Booking { id = 1, customerName = "", };
-            _messageService.SendMessage(msg);
+            _messageService.SendMessage(bookingInfo);
 
             return Ok("");
         }
