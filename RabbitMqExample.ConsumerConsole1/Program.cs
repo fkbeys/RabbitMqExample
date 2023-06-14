@@ -1,6 +1,5 @@
-﻿using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using System.Text.Json;
+﻿using RabbitMqExample.Common.Models;
+using RabbitMqExample.Common.Services;
 
 namespace RabbitMqExample.ConsumerConsole1
 {
@@ -8,38 +7,23 @@ namespace RabbitMqExample.ConsumerConsole1
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
 
-
-            var factory = new ConnectionFactory
+            var settings = new RabbitMqSettings
             {
-                HostName = "165.227.158.6",
+                Host = "165.227.158.6",
                 Port = 5672,
                 UserName = "guest",
-                Password = "guest",
-                VirtualHost = "/",
+                Password = "guest"
             };
 
-            var connection = factory.CreateConnection();
-            using var channel = connection.CreateModel();
+            MessageService<Booking> messageService = new MessageService<Booking>(settings);
+            var tx = messageService.ReceiveMessage();
 
-            channel.QueueDeclare("booking", durable: true, exclusive: false);
-
-            var consumer = new EventingBasicConsumer(channel);
-
-            consumer.Received += Consumer_Received;
-
+            
 
             Console.ReadLine();
         }
 
-        private static void Consumer_Received(object? sender, BasicDeliverEventArgs e)
-        {
-            var messageJson = e.Body;
-            var mesasge = JsonSerializer.Deserialize<(messageJson);
 
-
-            Console.WriteLine(e.Body);
-        }
     }
 }

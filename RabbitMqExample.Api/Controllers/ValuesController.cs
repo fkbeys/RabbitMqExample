@@ -13,7 +13,6 @@ namespace RabbitMqExample.Api.Controllers
         public ValuesController(MessageService<Booking> messageService)
         {
             _messageService = messageService;
-            // _messageService = new MessageService<Booking>(rabbitMqSettings);
         }
 
         [HttpGet]

@@ -1,4 +1,5 @@
 ﻿using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using RabbitMqExample.Common.Models;
 using System.Text;
 using System.Text.Json;
@@ -34,19 +35,54 @@ namespace RabbitMqExample.Common.Services
             channel.QueueDeclare(queueName(), durable: true, exclusive: false);
             return (connection, channel);
         }
+        //public override T ReceiveMessage()
+        //{
+        //    var taskCompletionSource = new TaskCompletionSource<T>();
+        //    var consumer = new EventingBasicConsumer(_channel);
 
-        public override T ReceiveMessage()
+        //    consumer.Received += (sender, args) =>
+        //    {
+        //        var body = args.Body.ToArray();
+        //        var message = Encoding.UTF8.GetString(body);
+        //        T data = JsonSerializer.Deserialize<T>(message);
+
+        //        taskCompletionSource.SetResult(data);
+        //    };
+        //    _channel.BasicConsume(queue: queueName(), autoAck: true, consumer: consumer);
+        //    var sss = taskCompletionSource.Task.Result;
+        //    return sss;
+        //}
+
+        //public override T ReceiveMessage()
+        //{
+        //    var taskCompletionSource = new TaskCompletionSource<T>();
+        //    var consumer = new EventingBasicConsumer(_channel);
+
+        //    consumer.Received += (sender, args) =>
+        //    {
+        //        var body = args.Body.ToArray();
+        //        var message = Encoding.UTF8.GetString(body);
+        //        T data = JsonSerializer.Deserialize<T>(message);
+
+        //        taskCompletionSource.SetResult(data);
+        //    };
+        //    _channel.BasicConsume(queue: queueName(), autoAck: true, consumer: consumer);
+        //    var sss = taskCompletionSource.Task.Result;
+        //    return sss;
+        //}
+
+        public void test()
         {
-            var result = _channel.BasicGet(queueName(), true);
-            if (result == null)
-                return default;
-
-            var body = result.Body.ToArray();
-            var jsonString = Encoding.UTF8.GetString(body);
-            var message = JsonSerializer.Deserialize<T>(jsonString);
-
-            return message;
+            var consumer = new EventingBasicConsumer(_channel);
+            consumer.Received += Consumer_Received;
         }
+
+        public override void Consumer_Received(object? sender, BasicDeliverEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+
 
         public override void SendMessage(T message)
         {

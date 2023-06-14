@@ -1,3 +1,4 @@
+using RabbitMqExample.Common;
 using RabbitMqExample.Common.Models;
 
 namespace RabbitMqExample.Api
@@ -9,7 +10,6 @@ namespace RabbitMqExample.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             var conf = builder.Configuration;
 
             builder.Services.AddControllers();
@@ -18,17 +18,12 @@ namespace RabbitMqExample.Api
             builder.Services.AddSwaggerGen();
 
             // Services
-            //builder.Services.Configure<RabbitMqSettings>(conf.GetSection("RabbitMqSettings"));
-
-            RabbitMqSettings? dbSettings = conf.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
-            builder.Services.AddSingleton<IRabbitMqSettings>(dbSettings);
-
-            // builder.Services.AddScoped(typeof(MessageAbstractService<>), typeof(MessageService<>));
-
+            RabbitMqSettings? rabbitMqSettings = conf.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
+            builder.Services.AddSingleton<IRabbitMqSettings>(rabbitMqSettings);
+            builder.Services.RabbitMqRegistiration(rabbitMqSettings);
 
 
             var app = builder.Build();
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
