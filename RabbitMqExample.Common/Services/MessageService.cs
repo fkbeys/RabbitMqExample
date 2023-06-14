@@ -13,9 +13,13 @@ namespace RabbitMqExample.Common.Services
         private readonly IConnection _connection;
         private readonly IRabbitMqSettings _rabbitMqSettings;
         private readonly Policy _retryPolicy;
+        private readonly string _queueName;
+        private readonly string _exchangeName;
+        private readonly string _routingKey;
 
-        protected override string queueName() => typeof(T).Name + "Queue";
-        protected override string exchangeName() => typeof(T).Name + "Exchange";
+        protected override string QueueName() => _queueName;
+        protected override string ExchangeName() => _exchangeName;
+        protected override string RoutingKey() => _routingKey;
 
         public MessageService(IRabbitMqSettings rabbitMqSettings)
         {
@@ -28,6 +32,9 @@ namespace RabbitMqExample.Common.Services
                 TimeSpan.FromSeconds(5),
                 TimeSpan.FromSeconds(10)
                 });
+            _queueName = typeof(T).Name + "Queue" + Guid.NewGuid().ToString();
+            _exchangeName = typeof(T).Name + "Exchange";
+            _routingKey = "";
             (_connection, _channel) = Connect();
         }
 
@@ -44,7 +51,9 @@ namespace RabbitMqExample.Common.Services
                 };
                 var connection = factory.CreateConnection();
                 var channel = connection.CreateModel();
-                channel.QueueDeclare(queueName(), durable: true, exclusive: false);
+                channel.ExchangeDeclare(exchange: _exchangeName, type: "fanout");
+                channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false);
+                channel.QueueBind(queue: _queueName, exchange: _exchangeName, routingKey: _routingKey);
                 return (connection, channel);
             });
         }
@@ -54,7 +63,6 @@ namespace RabbitMqExample.Common.Services
             _retryPolicy.Execute(() =>
             {
                 var consumer = new EventingBasicConsumer(_channel);
-
                 consumer.Received += (sender, args) =>
                 {
                     var body = args.Body.ToArray();
@@ -64,7 +72,7 @@ namespace RabbitMqExample.Common.Services
                     callback(data);
                 };
 
-                _channel.BasicConsume(queue: queueName(), autoAck: true, consumer: consumer);
+                _channel.BasicConsume(queue: _queueName, autoAck: true, consumer: consumer);
             });
         }
 
@@ -74,7 +82,7 @@ namespace RabbitMqExample.Common.Services
             {
                 var jsonString = JsonSerializer.Serialize(message);
                 var body = Encoding.UTF8.GetBytes(jsonString);
-                _channel.BasicPublish(exchange: "", routingKey: queueName(), basicProperties: null, body: body);
+                _channel.BasicPublish(exchange: _exchangeName, routingKey: _routingKey, basicProperties: null, body: body);
             });
         }
 

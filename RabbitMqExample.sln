@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMqExample.Api", "Rabb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMqExample.ConsumerConsole1", "RabbitMqExample.ConsumerConsole1\RabbitMqExample.ConsumerConsole1.csproj", "{4B14D1D6-90ED-47E5-B85D-2330E79670F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMqExample.Common", "RabbitMqExample.Common\RabbitMqExample.Common.csproj", "{E674E178-CA19-4885-927C-1A28B4717497}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMqExample.Common", "RabbitMqExample.Common\RabbitMqExample.Common.csproj", "{E674E178-CA19-4885-927C-1A28B4717497}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMqExample.ConsumerConsole2", "RabbitMqExample.ConsumerConsole2\RabbitMqExample.ConsumerConsole2.csproj", "{159E3008-DDCC-4494-BE44-2975710BA36F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{E674E178-CA19-4885-927C-1A28B4717497}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E674E178-CA19-4885-927C-1A28B4717497}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E674E178-CA19-4885-927C-1A28B4717497}.Release|Any CPU.Build.0 = Release|Any CPU
+		{159E3008-DDCC-4494-BE44-2975710BA36F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{159E3008-DDCC-4494-BE44-2975710BA36F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{159E3008-DDCC-4494-BE44-2975710BA36F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{159E3008-DDCC-4494-BE44-2975710BA36F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
