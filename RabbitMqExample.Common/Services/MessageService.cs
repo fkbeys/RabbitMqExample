@@ -84,6 +84,7 @@ namespace RabbitMqExample.Common.Services
                 var body = Encoding.UTF8.GetBytes(jsonString);
                 _channel.BasicPublish(exchange: _exchangeName, routingKey: _routingKey, basicProperties: null, body: body);
             });
+
         }
 
         public void Dispose()
